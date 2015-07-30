@@ -1,0 +1,101 @@
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    {% set fromRequest = friendship_manager.requestFromUserToUser(fromUser, toUser) %}
+    {% set toRequest = friendship_manager.requestFromUserToUser(toUser, fromUser) %}
+    <div>
+        {% if not fromRequest and not toRequest %}
+            <button data-from-user="{{ fromUser.username }}" data-to-user="{{ toUser.username }}" class="friendship_request">Request friendship</button>
+        {% elseif toRequest and toRequest.isWaiting %}
+            <button data-request-id="{{ toRequest.id }}" class="friendship_accept">Accept friendship</button>
+            <button data-request-id="{{ toRequest.id }}" class="friendship_reject">Reject friendship</button>
+        {% elseif toRequest and toRequest.isRejected %}
+            Request was rejected
+            <button data-request-id="{{ toRequest.id }}" class="friendship_accept">Accept anyway</button>
+        {% elseif toRequest and toRequest.isAccepted %}
+            <button data-request-id="{{ toRequest.id }}" class="friendship_reject">Remove from friends</button>
+        {% elseif fromRequest and fromRequest.isRejected %}
+            Request rejected
+        {% elseif fromRequest and fromRequest.isWaiting %}
+            Request sent
+        {% endif %}
+    </div>
+    <div class="friendship_info"></div>
+    <script>
+        $('button.friendship_request').click(function() {
+            button = $(this);
+            if (button.attr('disabled') != 'disabled') {
+                button.attr('disabled','disabled');
+                var toUser = button.data('to-user');
+                var url = '{{ path('friendship_request',{toUsername:'___username___'}) }}';
+                url = url.split('___username___').join(toUser);
+                $.get(
+                        url,
+                        function(data) {
+                            if(data.result == 'success') {
+                                $('div.friendship_info').text('Request sent');
+                                button.parent().remove();
+                            } else if (data.error !== undefined) {
+                                $('div.friendship_info').text(data.error);
+                                button.removeAttr('disabled');
+                            } else {
+                                $('div.friendship_info').text('unknown error');
+                                button.removeAttr('disabled');
+                            }
+                        },
+                        'json'
+                )
+            }
+        });
+
+        $('button.friendship_accept').click(function() {
+            button = $(this);
+            if (button.attr('disabled') != 'disabled') {
+                button.attr('disabled','disabled');
+                var requestId = button.data('request-id');
+                var url = '{{ path('friendship_accept',{id:'___id___'}) }}';
+                url = url.replace('___id___',requestId);
+                $.get(
+                        url,
+                        function(data) {
+                            if(data.result == 'success') {
+                                $('div.friendship_info').text('Accepted');
+                                button.parent().remove();
+                            } else if (data.error !== undefined) {
+                                $('div.friendship_info').text(data.error);
+                                button.removeAttr('disabled');
+                            } else {
+                                $('div.friendship_info').text('unknown error');
+                                button.removeAttr('disabled');
+                            }
+                        },
+                        'json'
+                )
+            }
+        });
+
+        $('button.friendship_reject').click(function() {
+            button = $(this);
+            if (button.attr('disabled') != 'disabled') {
+                button.attr('disabled','disabled');
+                var requestId = button.data('request-id');
+                var url = '{{ path('friendship_reject',{id:'___id___'}) }}';
+                url = url.replace('___id___',requestId);
+                $.get(
+                        url,
+                        function(data) {
+                            if(data.result == 'success') {
+                                $('div.friendship_info').text('Rejected');
+                                button.parent().remove();
+                            } else if (data.error !== undefined) {
+                                $('div.friendship_info').text(data.error);
+                                button.removeAttr('disabled');
+                            } else {
+                                $('div.friendship_info').text('unknown error');
+                                button.removeAttr('disabled');
+                            }
+                        },
+                        'json'
+                )
+            }
+        });
+    </script>
+{% endif %}

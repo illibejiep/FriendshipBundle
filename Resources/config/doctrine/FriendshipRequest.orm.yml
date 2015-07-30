@@ -1,0 +1,26 @@
+FriendshipBundle\Entity\FriendshipRequest:
+  type: entity
+  table: friendship_request
+  id:
+    id:
+      type: integer
+      id: true
+      generator:
+        strategy: AUTO
+  fields:
+    isAccepted:
+      column: is_accepted
+      type: boolean
+      nullable: true
+  manyToOne:
+    fromUser:
+      targetEntity: \Symfony\Component\Security\Core\User\UserInterface
+      joinColumn:
+        name: from_user_id
+        referencedColumnName: id
+    toUser:
+      targetEntity: \Symfony\Component\Security\Core\User\UserInterface
+      joinColumn:
+        name: to_user_id
+        referencedColumnName: id
+  lifecycleCallbacks: {  }

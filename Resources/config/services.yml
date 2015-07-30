@@ -1,0 +1,4 @@
+services:
+  friendship.manager:
+    class: FriendshipBundle\Manager\FriendshipManager
+    arguments: [@service_container, '%friendship.user_provider%' ]

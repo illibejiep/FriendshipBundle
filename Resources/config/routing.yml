@@ -1,0 +1,11 @@
+friendship_request:
+    path:     /request/{toUsername}
+    defaults: { _controller: FriendshipBundle:Default:request }
+
+friendship_accept:
+    path:     /accept/{id}
+    defaults: { _controller: FriendshipBundle:Default:accept }
+
+friendship_reject:
+    path:     /reject/{id}
+    defaults: { _controller: FriendshipBundle:Default:reject }
