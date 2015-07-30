@@ -13,6 +13,6 @@
         "php": ">=5.4"
     },
     "autoload": {
-        "psr-4": { "Illibejiep\\FriendshipBundle\\": "" }
+        "psr-4": { "FriendshipBundle\\": "" }
     }
 }
