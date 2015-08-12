@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FriendshipBundle\Entity\FriendshipRequest;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DefaultController extends Controller
 {
@@ -15,7 +16,6 @@ class DefaultController extends Controller
     */
     public function requestAction($toUsername)
     {
-        $em = $this->getDoctrine()->getManager();
         /** @var UserInterface $user */
         $user = $this->getUser();
 
