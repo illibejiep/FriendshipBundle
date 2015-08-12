@@ -3,19 +3,22 @@
     {% set toRequest = friendship_manager.requestFromUserToUser(toUser, fromUser) %}
     <div>
         {% if not fromRequest and not toRequest %}
+            <div class="friendship_button_info"></div>
             <button data-from-user="{{ fromUser.username }}" data-to-user="{{ toUser.username }}" class="friendship_request">Request friendship</button>
         {% elseif toRequest and toRequest.isWaiting %}
+            <div class="friendship_button_info"></div>
             <button data-request-id="{{ toRequest.id }}" class="friendship_accept">Accept friendship</button>
             <button data-request-id="{{ toRequest.id }}" class="friendship_reject">Reject friendship</button>
         {% elseif toRequest and toRequest.isRejected %}
-            Request was rejected
+            <div class="friendship_button_info">You and {{ toUser.username }} used to be friends</div>
             <button data-request-id="{{ toRequest.id }}" class="friendship_accept">Accept anyway</button>
         {% elseif toRequest and toRequest.isAccepted %}
+            <div class="friendship_button_info">You and {{ toUser.username }} are friends</div>
             <button data-request-id="{{ toRequest.id }}" class="friendship_reject">Remove from friends</button>
         {% elseif fromRequest and fromRequest.isRejected %}
-            Request rejected
+            <div class="friendship_button_info">Request rejected</div>
         {% elseif fromRequest and fromRequest.isWaiting %}
-            Request sent
+            <div class="friendship_button_info">Request sent</div>
         {% endif %}
     </div>
     <div class="friendship_info"></div>

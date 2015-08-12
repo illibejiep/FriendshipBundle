@@ -2,47 +2,42 @@
 
 namespace FriendshipBundle\Manager;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FriendshipBundle\Entity\FriendshipRequest;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FriendshipManager {
 
     /** @var  EntityManager */
     protected $em;
 
-    /** @var UserProviderInterface */
-    protected $userProvider;
-
-    function __construct(Container $container,  $userProvider)
+    function __construct(EntityManager $em)
     {
-        $this->em = $container->get('doctrine.orm.entity_manager');
-        $this->userProvider = $container->get($userProvider);
+        $this->em = $em;
     }
 
 
     public function createRequest($fromUsername, $toUsername)
     {
-        $fromUser = $this->userProvider->loadUserByUsername($fromUsername);
-        $toUser = $this->userProvider->loadUserByUsername($toUsername);
-
-        if ($toUser->getUsername() == $fromUser->getUsername()) {
-            throw new \Exception('You can\'t friend with yourself');
+        if ($fromUsername == $toUsername) {
+            throw new \Exception('You can\'t be friend with yourself');
         }
 
         $request = new FriendshipRequest();
-        $request->setFromUser($fromUser);
-        $request->setToUser($toUser);
+        $request->setFromUsername($fromUsername);
+        $request->setToUsername($toUsername);
 
         $this->em->persist($request);
 
         try {
             $this->em->flush();
-        } catch(UniqueConstraintViolationException $e) {
-            throw new \Exception('request already sent');
+        } catch(DBALException $e) {
+            // doctrine became worse and worse
+            if (stripos($e->getMessage(),'unique') !== false)
+                throw new \Exception('request already sent');
+            else
+                throw $e;
         }
 
         return $request;
@@ -50,12 +45,12 @@ class FriendshipManager {
 
     public function acceptRequest(FriendshipRequest $request)
     {
-        $request->setIsAccepted(true);
+        $request->setStatus(FriendshipRequest::STATUS_ACCEPTED);
 
         $mirrorRequest = new FriendshipRequest();
-        $mirrorRequest->setIsAccepted(true);
-        $mirrorRequest->setFromUser($request->getToUser());
-        $mirrorRequest->setToUser($request->getFromUser());
+        $mirrorRequest->setStatus(FriendshipRequest::STATUS_ACCEPTED);
+        $mirrorRequest->setFromUsername($request->getToUsername());
+        $mirrorRequest->setToUsername($request->getFromUsername());
 
         $this->em->persist($request);
         $this->em->persist($mirrorRequest);
@@ -66,13 +61,13 @@ class FriendshipManager {
 
     public function rejectRequest(FriendshipRequest $request)
     {
-        $request->setIsAccepted(false);
+        $request->setStatus(FriendshipRequest::STATUS_REJECTED);
 
         $repository = $this->em->getRepository('FriendshipBundle:FriendshipRequest');
 
         $mirrorRequest = $repository->findOneBy(array(
-            'fromUser' => $request->getToUser(),
-            'toUser' => $request->getFromUser(),
+            'fromUsername' => $request->getToUsername(),
+            'toUsername' => $request->getFromUsername(),
         ));
 
         if ($mirrorRequest)
@@ -89,7 +84,7 @@ class FriendshipManager {
         $repository = $this->em->getRepository('FriendshipBundle:FriendshipRequest');
 
         $requests = $repository->findBy(array(
-            'toUser' => $user,
+            'toUsername' => $user->getUsername(),
         ));
 
         return $requests;
@@ -100,7 +95,7 @@ class FriendshipManager {
         $repository = $this->em->getRepository('FriendshipBundle:FriendshipRequest');
 
         $requests = $repository->findBy(array(
-            'fromUser' => $user,
+            'fromUsername' => $user->getUsername(),
         ));
 
         return $requests;
@@ -111,8 +106,8 @@ class FriendshipManager {
         $repository = $this->em->getRepository('FriendshipBundle:FriendshipRequest');
 
         $request = $repository->findOneBy(array(
-            'fromUser' => $fromUser,
-            'toUser' => $toUser,
+            'fromUsername' => $fromUser->getUsername(),
+            'toUsername' => $toUser->getUsername(),
         ));
 
         return $request;
@@ -123,19 +118,12 @@ class FriendshipManager {
         $repository = $this->em->getRepository('FriendshipBundle:FriendshipRequest');
 
         $request = $repository->findOneBy(array(
-            'fromUser' => $fromUser,
-            'toUser' => $toUser,
+            'fromUsername' => $fromUser->getUsername(),
+            'toUsername' => $toUser->getUsername(),
+            'status' => FriendshipRequest::STATUS_ACCEPTED
         ));
 
-        if ($request && $request->isAccepted())
-            return true;
-
-        $request = $repository->findOneBy(array(
-            'fromUser' => $toUser,
-            'toUser' => $fromUser,
-        ));
-
-        if ($request && $request->isAccepted())
+        if ($request)
             return true;
 
         return false;

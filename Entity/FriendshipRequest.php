@@ -3,29 +3,32 @@
 namespace FriendshipBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class FriendshipRequest implements \JsonSerializable
 {
+    const STATUS_WAITING = 0;
+    const STATUS_ACCEPTED = 1;
+    const STATUS_REJECTED = 2;
+
     /**
      * @var integer
      */
     private $id;
 
     /**
-     * @var boolean
+     * @var integer
      */
-    private $isAccepted;
+    private $status = self::STATUS_WAITING;
 
     /**
-     * @var UserInterface
+     * @var string
      */
-    private $fromUser;
+    private $fromUsername;
 
     /**
-     * @var UserInterface
+     * @var string
      */
-    private $toUser;
+    private $toUsername;
 
 
     /**
@@ -39,66 +42,66 @@ class FriendshipRequest implements \JsonSerializable
     }
 
     /**
-     * @param mixed $isAccepted
+     * @param int $status
      */
-    public function setIsAccepted($isAccepted)
+    public function setStatus($status)
     {
-        $this->isAccepted = $isAccepted;
+        $this->status = $status;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getIsAccepted()
+    public function getStatus()
     {
-        return $this->isAccepted;
+        return $this->status;
     }
 
     /**
-     * @param UserInterface $fromUser
+     * @param string $fromUsername
      */
-    public function setFromUser($fromUser)
+    public function setFromUsername($fromUsername)
     {
-        $this->fromUser = $fromUser;
+        $this->fromUsername = $fromUsername;
     }
 
     /**
-     * @return UserInterface
+     * @return string
      */
-    public function getFromUser()
+    public function getFromUsername()
     {
-        return $this->fromUser;
+        return $this->fromUsername;
     }
 
     /**
-     * @param UserInterface $toUser
+     * @param string $toUsername
      */
-    public function setToUser($toUser)
+    public function setToUsername($toUsername)
     {
-        $this->toUser = $toUser;
+        $this->toUsername = $toUsername;
     }
 
     /**
-     * @return UserInterface
+     * @return string
      */
-    public function getToUser()
+    public function getToUsername()
     {
-        return $this->toUser;
+        return $this->toUsername;
     }
 
     public function isAccepted()
     {
-        return $this->isAccepted === true;
+        return $this->status === self::STATUS_ACCEPTED;
     }
 
     public function isRejected()
     {
-        return $this->isAccepted === false;
+        return $this->status === self::STATUS_REJECTED;
     }
 
     public function isWaiting()
     {
-        return $this->isAccepted === null;
+        return $this->status === self::STATUS_WAITING;
     }
 
     /**
@@ -112,11 +115,11 @@ class FriendshipRequest implements \JsonSerializable
     {
         return array(
             'id' => $this->id,
-            'fromUser' => $this->fromUser->getUsername(),
-            'toUser' => $this->toUser->getUsername(),
-            'isAccepted' => $this->isAccepted,
+            'fromUsername' => $this->fromUsername,
+            'toUser' => $this->toUsername,
+            'isAccepted' => $this->isAccepted(),
+            'isRejected' => $this->isRejected(),
+            'isWaiting' => $this->isWaiting(),
         );
     }
-
-
 }

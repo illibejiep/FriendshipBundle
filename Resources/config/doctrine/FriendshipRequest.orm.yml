@@ -1,6 +1,10 @@
 FriendshipBundle\Entity\FriendshipRequest:
   type: entity
   table: friendship_request
+  uniqueConstraints:
+    friendship_request_users_idx:
+      unique: true
+      columns: [ from_username, from_username ]
   id:
     id:
       type: integer
@@ -8,19 +12,18 @@ FriendshipBundle\Entity\FriendshipRequest:
       generator:
         strategy: AUTO
   fields:
-    isAccepted:
-      column: is_accepted
-      type: boolean
-      nullable: true
-  manyToOne:
-    fromUser:
-      targetEntity: \Symfony\Component\Security\Core\User\UserInterface
-      joinColumn:
-        name: from_user_id
-        referencedColumnName: id
-    toUser:
-      targetEntity: \Symfony\Component\Security\Core\User\UserInterface
-      joinColumn:
-        name: to_user_id
-        referencedColumnName: id
+    status:
+      column: status
+      type: integer
+      options:
+        default: 0
+    fromUsername:
+      column: from_username
+      type: string
+      length: 255
+    toUsername:
+      column: to_username
+      type: string
+      length: 255
+
   lifecycleCallbacks: {  }

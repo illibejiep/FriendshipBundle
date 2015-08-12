@@ -5,15 +5,7 @@ namespace FriendshipBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use FriendshipBundle\Entity\FriendshipRequest;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 
 class DefaultController extends Controller
 {
@@ -24,7 +16,7 @@ class DefaultController extends Controller
     public function requestAction($toUsername)
     {
         $em = $this->getDoctrine()->getManager();
-        /** @var UserInterface $fromUser */
+        /** @var UserInterface $user */
         $user = $this->getUser();
 
         $jsonResponse = new JsonResponse();
@@ -61,7 +53,7 @@ class DefaultController extends Controller
         /** @var UserInterface $user */
         $user = $this->getUser();
 
-        if (!$request || $user->getUsername() != $request->getToUser()->getUsername()) {
+        if (!$request || $user->getUsername() != $request->getToUsername()) {
             return $jsonResponse->setData(array('error' => 'wrong request id'));
         }
 
@@ -93,7 +85,7 @@ class DefaultController extends Controller
         /** @var UserInterface $user */
         $user = $this->getUser();
 
-        if (!$request || $user->getUsername() != $request->getToUser()->getUsername()) {
+        if (!$request || $user->getUsername() != $request->getToUsername()) {
             return $jsonResponse->setData(array('error' => 'wrong request id'));
         }
 

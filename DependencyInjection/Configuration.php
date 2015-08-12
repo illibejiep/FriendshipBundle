@@ -4,7 +4,6 @@ namespace FriendshipBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Serializer\Serializer;
 
 /**
  * This is the class that validates and merges configuration from your app/config files
@@ -20,9 +19,6 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('friendship');
-
-        $rootNode->children()->variableNode('user_entity')->isRequired();
-        $rootNode->children()->variableNode('user_provider')->isRequired();
 
         return $treeBuilder;
     }

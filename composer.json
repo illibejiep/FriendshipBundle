@@ -2,6 +2,7 @@
     "name": "illibejiep/friendship-bundle",
     "type": "symfony-bundle",
     "description": "Friendship for symfony users",
+    "keywords": [ "friendship", "social", "bundle" ],
     "license": "MIT",
     "authors": [
         {

@@ -1,4 +1,9 @@
 services:
   friendship.manager:
     class: FriendshipBundle\Manager\FriendshipManager
-    arguments: [@service_container, '%friendship.user_provider%' ]
+    arguments: [ @doctrine.orm.entity_manager ]
+  friendship.twig.extension:
+    class: FriendshipBundle\Twig\FriendshipTwigExtension
+    arguments: [ @friendship.manager ]
+    tags:
+      - { name: 'twig.extension' }
