@@ -30,4 +30,4 @@ In twig template:
 //...
 ```
 
-It will show friendship button for someUser to manage friendship with anoterUser.
+It will show friendship button for someUser to manage friendship with anotherUser.
