@@ -1,4 +1,8 @@
-# Installation
+# Friendship bundle
+
+It provide simple relation functionality for symfony2 users.
+
+## Installation
 
 ```
     composer require illibejiep/friendship-bundle dev-master
@@ -16,7 +20,7 @@ Then add in AppKernel.php
 
 Done.
 
-# Usage
+## Usage
 
 In twig template:
 
