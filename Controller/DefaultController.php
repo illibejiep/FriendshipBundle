@@ -2,18 +2,18 @@
 
 namespace FriendshipBundle\Controller;
 
+use FriendshipBundle\Entity\FriendshipRequest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use FriendshipBundle\Entity\FriendshipRequest;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DefaultController extends Controller
 {
     /**
-    * @param $toUserId
-    * @return JsonResponse
-    */
+     * @param $toUserId
+     * @return JsonResponse
+     */
     public function requestAction($toUsername)
     {
         /** @var UserInterface $user */

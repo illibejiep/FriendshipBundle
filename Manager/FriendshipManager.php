@@ -7,7 +7,8 @@ use Doctrine\ORM\EntityManager;
 use FriendshipBundle\Entity\FriendshipRequest;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class FriendshipManager {
+class FriendshipManager
+{
 
     /** @var  EntityManager */
     protected $em;
@@ -32,9 +33,9 @@ class FriendshipManager {
 
         try {
             $this->em->flush();
-        } catch(DBALException $e) {
+        } catch (DBALException $e) {
             // doctrine became worse and worse
-            if (stripos($e->getMessage(),'unique') !== false)
+            if (stripos($e->getMessage(), 'unique') !== false)
                 throw new \Exception('request already sent');
             else
                 throw $e;

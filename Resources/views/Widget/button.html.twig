@@ -4,7 +4,9 @@
     <div>
         {% if not fromRequest and not toRequest %}
             <div class="friendship_button_info"></div>
-            <button data-from-user="{{ fromUser.username }}" data-to-user="{{ toUser.username }}" class="friendship_request">Request friendship</button>
+            <button data-from-user="{{ fromUser.username }}" data-to-user="{{ toUser.username }}"
+                    class="friendship_request">Request friendship
+            </button>
         {% elseif toRequest and toRequest.isWaiting %}
             <div class="friendship_button_info"></div>
             <button data-request-id="{{ toRequest.id }}" class="friendship_accept">Accept friendship</button>
@@ -23,17 +25,17 @@
     </div>
     <div class="friendship_info"></div>
     <script>
-        $('button.friendship_request').click(function() {
+        $('button.friendship_request').click(function () {
             button = $(this);
             if (button.attr('disabled') != 'disabled') {
-                button.attr('disabled','disabled');
+                button.attr('disabled', 'disabled');
                 var toUser = button.data('to-user');
                 var url = '{{ path('friendship_request',{toUsername:'___username___'}) }}';
                 url = url.split('___username___').join(toUser);
                 $.get(
                         url,
-                        function(data) {
-                            if(data.result == 'success') {
+                        function (data) {
+                            if (data.result == 'success') {
                                 $('div.friendship_info').text('Request sent');
                                 button.parent().remove();
                             } else if (data.error !== undefined) {
@@ -49,17 +51,17 @@
             }
         });
 
-        $('button.friendship_accept').click(function() {
+        $('button.friendship_accept').click(function () {
             button = $(this);
             if (button.attr('disabled') != 'disabled') {
-                button.attr('disabled','disabled');
+                button.attr('disabled', 'disabled');
                 var requestId = button.data('request-id');
                 var url = '{{ path('friendship_accept',{id:'___id___'}) }}';
-                url = url.replace('___id___',requestId);
+                url = url.replace('___id___', requestId);
                 $.get(
                         url,
-                        function(data) {
-                            if(data.result == 'success') {
+                        function (data) {
+                            if (data.result == 'success') {
                                 $('div.friendship_info').text('Accepted');
                                 button.parent().remove();
                             } else if (data.error !== undefined) {
@@ -75,17 +77,17 @@
             }
         });
 
-        $('button.friendship_reject').click(function() {
+        $('button.friendship_reject').click(function () {
             button = $(this);
             if (button.attr('disabled') != 'disabled') {
-                button.attr('disabled','disabled');
+                button.attr('disabled', 'disabled');
                 var requestId = button.data('request-id');
                 var url = '{{ path('friendship_reject',{id:'___id___'}) }}';
-                url = url.replace('___id___',requestId);
+                url = url.replace('___id___', requestId);
                 $.get(
                         url,
-                        function(data) {
-                            if(data.result == 'success') {
+                        function (data) {
+                            if (data.result == 'success') {
                                 $('div.friendship_info').text('Rejected');
                                 button.parent().remove();
                             } else if (data.error !== undefined) {

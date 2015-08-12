@@ -2,8 +2,6 @@
 
 namespace FriendshipBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 class FriendshipRequest implements \JsonSerializable
 {
     const STATUS_WAITING = 0;
