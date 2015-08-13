@@ -115,6 +115,7 @@ class FriendshipRequest implements \JsonSerializable
             'id' => $this->id,
             'fromUsername' => $this->fromUsername,
             'toUser' => $this->toUsername,
+            'status' => $this->status,
             'isAccepted' => $this->isAccepted(),
             'isRejected' => $this->isRejected(),
             'isWaiting' => $this->isWaiting(),
