@@ -25,9 +25,16 @@ class DefaultController extends Controller
             return $jsonResponse->setData(array('error' => 'unauthorized user'));
         }
 
+        $dispatcher = $this->get('event_dispatcher');
         $manager = $this->get('friendship.manager');
         try {
-            $request = $manager->createRequest($user->getUsername(), $toUsername);
+
+            $request = $manager->prepareRequest($user->getUsername(), $toUsername);
+            $dispatcher->dispatch(FriendshipEvents::REQUEST_BEFORE, new FriendshipEvent($request));
+
+            $manager->processRequest($request);
+            $dispatcher->dispatch(FriendshipEvents::REQUEST_AFTER, new FriendshipEvent($request));
+
         } catch (\Exception $e) {
             return $jsonResponse->setData(array('error' => $e->getMessage()));
         }
@@ -57,10 +64,15 @@ class DefaultController extends Controller
             return $jsonResponse->setData(array('error' => 'wrong request id'));
         }
 
+        $dispatcher = $this->get('event_dispatcher');
         $manager = $this->get('friendship.manager');
 
         try {
-            $manager->acceptRequest($request);
+
+            $dispatcher->dispatch(FriendshipEvents::ACCEPT_BEFORE, new FriendshipEvent($request));
+            $request = $manager->acceptRequest($request);
+            $dispatcher->dispatch(FriendshipEvents::ACCEPT_AFTER, new FriendshipEvent($request));
+
         } catch (\Exception $e) {
             return $jsonResponse->setData(array('error' => $e->getMessage()));
         }
@@ -89,10 +101,15 @@ class DefaultController extends Controller
             return $jsonResponse->setData(array('error' => 'wrong request id'));
         }
 
+        $dispatcher = $this->get('event_dispatcher');
         $manager = $this->get('friendship.manager');
 
         try {
-            $manager->rejectRequest($request);
+
+            $dispatcher->dispatch(FriendshipEvents::REJECT_BEFORE, new FriendshipEvent($request));
+            $request = $manager->rejectRequest($request);
+            $dispatcher->dispatch(FriendshipEvents::REJECT_AFTER, new FriendshipEvent($request));
+
         } catch (\Exception $e) {
             return $jsonResponse->setData(array('error' => $e->getMessage()));
         }

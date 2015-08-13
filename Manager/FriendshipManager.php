@@ -18,28 +18,40 @@ class FriendshipManager
         $this->em = $em;
     }
 
-
     public function createRequest($fromUsername, $toUsername)
+    {
+        $request = $this->prepareRequest($fromUsername, $toUsername);
+        $this->processRequest($request);
+
+        return $request;
+    }
+
+    public function prepareRequest($fromUsername, $toUsername)
     {
         if ($fromUsername == $toUsername) {
             throw new \Exception('You can\'t be friend with yourself');
         }
 
+        $repository = $this->em->getRepository('FriendshipBundle:FriendshipRequest');
+        $request = $repository->findOneBy(array(
+            'fromUsername' => $fromUsername,
+            'toUsername' => $toUsername,
+        ));
+
+        if ($request)
+            throw new \Exception('request already sent');
+
         $request = new FriendshipRequest();
         $request->setFromUsername($fromUsername);
         $request->setToUsername($toUsername);
 
-        $this->em->persist($request);
+        return $request;
+    }
 
-        try {
-            $this->em->flush();
-        } catch (DBALException $e) {
-            // doctrine became worse and worse
-            if (stripos($e->getMessage(), 'unique') !== false)
-                throw new \Exception('request already sent');
-            else
-                throw $e;
-        }
+    public function processRequest(FriendshipRequest $request)
+    {
+        $this->em->persist($request);
+        $this->em->flush();
 
         return $request;
     }
@@ -57,7 +69,7 @@ class FriendshipManager
         $this->em->persist($mirrorRequest);
         $this->em->flush($request);
 
-        return $this;
+        return $request;
     }
 
     public function rejectRequest(FriendshipRequest $request)
@@ -77,7 +89,7 @@ class FriendshipManager
         $this->em->persist($request);
         $this->em->flush($request);
 
-        return $this;
+        return $request;
     }
 
     public function getRequestsToUser(UserInterface $user)
