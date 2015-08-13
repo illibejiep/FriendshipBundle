@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use FriendshipBundle\FriendshipEvents;
+use FriendshipBundle\Event\FriendshipEvent;
 
 class DefaultController extends Controller
 {
