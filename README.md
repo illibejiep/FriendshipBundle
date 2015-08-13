@@ -1,6 +1,8 @@
 # Friendship bundle
 
-It provide simple relation functionality for symfony2 users.
+It provides simple relation functionality for symfony2 users.
+
+[![Latest Stable Version](https://poser.pugx.org/illibejiep/friendship-bundle/v/stable)](https://packagist.org/packages/illibejiep/friendship-bundle) [![Total Downloads](https://poser.pugx.org/illibejiep/friendship-bundle/downloads)](https://packagist.org/packages/illibejiep/friendship-bundle) [![Latest Unstable Version](https://poser.pugx.org/illibejiep/friendship-bundle/v/unstable)](https://packagist.org/packages/illibejiep/friendship-bundle) [![License](https://poser.pugx.org/illibejiep/friendship-bundle/license)](https://packagist.org/packages/illibejiep/friendship-bundle)
 
 ## Installation
 
