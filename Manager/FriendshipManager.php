@@ -2,7 +2,6 @@
 
 namespace FriendshipBundle\Manager;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use FriendshipBundle\Entity\FriendshipRequest;
 use Symfony\Component\Security\Core\User\UserInterface;
