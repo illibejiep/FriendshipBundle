@@ -4,7 +4,7 @@ FriendshipBundle\Entity\FriendshipRequest:
   uniqueConstraints:
     friendship_request_users_idx:
       unique: true
-      columns: [ from_username, from_username ]
+      columns: [ from_username, to_username ]
   id:
     id:
       type: integer
